@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserUpdate extends StatelessWidget {
-  UserUpdate({Key? key}) : super(key: key);
+  final String idUser;
+
+  UserUpdate({Key? key, required this.idUser}) : super(key: key);
 
   TextEditingController textEditingName = TextEditingController();
   TextEditingController textEditingLastName = TextEditingController();
@@ -24,9 +26,9 @@ class UserUpdate extends StatelessWidget {
             height: 50,
           ),
           Header(
-            textEditingName: this.textEditingName,
-            textEditingLastName: this.textEditingLastName,
-          ),
+              textEditingName: this.textEditingName,
+              textEditingLastName: this.textEditingLastName,
+              idUser: this.idUser),
           SizedBox(
             height: 50,
           ),
@@ -43,20 +45,24 @@ class UserUpdate extends StatelessWidget {
 class Header extends StatelessWidget {
   TextEditingController textEditingName;
   TextEditingController textEditingLastName;
+  String idUser;
 
   Header(
       {Key? key,
       required this.textEditingName,
-      required this.textEditingLastName})
+      required this.textEditingLastName,
+      required this.idUser})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        onPressed: () => {
-              BlocProvider.of<UserBloc>(context).add(UpdateUserEvent(
-                  UserModel(textEditingName.text, textEditingLastName.text)))
-            },
+        onPressed: () {
+          BlocProvider.of<UserBloc>(context).add(UpdateUserEvent(UserModel(
+              textEditingName.text, textEditingLastName.text,
+              id: idUser)));
+          Navigator.pop(context);
+        },
         iconSize: 40,
         icon: Icon(Icons.save));
   }
@@ -78,18 +84,20 @@ class Form extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: Column(children: [
           TextField(
+              controller: textEditingName,
               decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: 'Nombres',
-          )),
+                border: OutlineInputBorder(),
+                hintText: 'Nombres',
+              )),
           SizedBox(
             height: 10,
           ),
           TextField(
+              controller: textEditingLastName,
               decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: 'Apellidos',
-          ))
+                border: OutlineInputBorder(),
+                hintText: 'Apellidos',
+              ))
         ]));
   }
 }

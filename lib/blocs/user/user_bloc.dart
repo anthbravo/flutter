@@ -19,25 +19,25 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   ) async* {
     if (event is UserListEvent) {
       print('UserListEvent');
-      // var userList = await userRepository.getUsers();
-      var userList = [UserModel('Anthony', 'Bravo', '1')];
+      var userList = await userRepository.getUsers();
 
-      yield UserState(userList);
+      yield UserState(userList: userList);
     } else if (event is AddUserEvent) {
       print('AddUserEvent');
-      // await userRepository.addUser(event.user);
-      // var userList = await userRepository.getUsers();
+      print(event.user.name);
+      await userRepository.addUser(event.user);
       yield UserState();
     } else if (event is FindUserEvent) {
       print('FindUserEvent');
       yield UserState();
     } else if (event is UpdateUserEvent) {
       print('UpdateUserEvent');
-      // await userRepository.updateUser(event.user);
+      await userRepository.updateUser(event.user);
       yield UserState();
     } else if (event is DeleteUserEvent) {
       print('DeleteUserEvent');
-      // await userRepository.deleteUser(event.id);
+      await userRepository.deleteUser(event.id);
+
       yield UserState();
     }
   }

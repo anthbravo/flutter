@@ -1,8 +1,8 @@
 part of 'user_bloc.dart';
 
 class UserState {
-  List<UserModel>? userList = [];
-  UserModel? user;
+  final List<UserModel> userList;
+  final UserModel user;
 
-  UserState([this.userList, this.user]);
+  const UserState({this.userList = const [], this.user = const UserModel('', '')});
 }

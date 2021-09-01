@@ -29,7 +29,7 @@ class UserRepository {
       return UserModel(
         maps[i]['name'] as String,
         maps[i]['lastName'] as String,
-        maps[i]['id'] as String,
+        id: maps[i]['id'].toString() ,
       );
     });
   }
@@ -39,7 +39,7 @@ class UserRepository {
 
     return db.insert(
       "User",
-      user.toMap(),
+      user.toMapInsert(),
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }

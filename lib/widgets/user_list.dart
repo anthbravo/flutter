@@ -1,4 +1,5 @@
 import 'package:crud/blocs/user/user_bloc.dart';
+import 'package:crud/widgets/user_update.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,14 +54,21 @@ class List extends StatelessWidget {
                   Text('${state.userList?[index].lastName}'),
                   Expanded(child: Container()),
                   IconButton(
-                      onPressed: () =>
-                          {Navigator.pushNamed(context, '/user_update')},
+                      onPressed: () async {
+                        await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserUpdate(
+                                    idUser: '${state.userList?[index].id}')));
+                        BlocProvider.of<UserBloc>(context).add(UserListEvent());
+                      },
                       icon: Icon(Icons.update)),
                   IconButton(
-                      onPressed: () => {
-                            BlocProvider.of<UserBloc>(context).add(
-                                DeleteUserEvent('${state.userList?[index].id}'))
-                          },
+                      onPressed: () {
+                        BlocProvider.of<UserBloc>(context).add(
+                            DeleteUserEvent('${state.userList?[index].id}'));
+                        BlocProvider.of<UserBloc>(context).add(UserListEvent());
+                      },
                       icon: Icon(Icons.remove))
                 ],
               ),
@@ -81,7 +89,10 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
         iconSize: 40,
-        onPressed: () => {Navigator.pushNamed(context, '/user_create')},
+        onPressed: () async {
+          await Navigator.pushNamed(context, '/user_create');
+          BlocProvider.of<UserBloc>(context).add(UserListEvent());
+        },
         icon: Icon(Icons.add));
   }
 }

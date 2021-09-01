@@ -34,8 +34,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Color.fromRGBO(150, 160, 150, 0.2)),
       routes: {
         '/user_list': (BuildContext context) => UserList(),
-        '/user_create': (BuildContext context) => UserCreate(),
-        '/user_update': (BuildContext context) => UserUpdate()
+        '/user_create': (BuildContext context) => UserCreate()
       },
       initialRoute: '/user_list',
       home: UserList(),

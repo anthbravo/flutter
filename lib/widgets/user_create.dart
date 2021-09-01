@@ -53,10 +53,11 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        onPressed: () => {
-              BlocProvider.of<UserBloc>(context).add(AddUserEvent(
-                  UserModel(textEditingName.text, textEditingLastName.text)))
-            },
+        onPressed: () {
+          BlocProvider.of<UserBloc>(context).add(AddUserEvent(
+              UserModel(textEditingName.text, textEditingLastName.text)));
+          Navigator.pop(context);
+        },
         iconSize: 40,
         icon: Icon(Icons.save));
   }
