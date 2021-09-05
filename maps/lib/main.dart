@@ -38,11 +38,18 @@ class Maps extends StatefulWidget {
 
 class _MapsState extends State<Maps> {
   static const START_POSITION =
-      CameraPosition(target: LatLng(-9.998052, -77.101699), zoom: 14);
-
+      CameraPosition(target: LatLng(-9.998052, -77.101699), zoom: 16);
   Location location = Location();
-
   late GoogleMapController googleMapController;
+
+  Marker origin = Marker(
+      markerId: const MarkerId('origin'),
+      infoWindow: const InfoWindow(title: 'Origen'),
+      position: const LatLng(-11.998052, -77.101699));
+  Marker destination = Marker(
+      markerId: const MarkerId('destination'),
+      infoWindow: const InfoWindow(title: 'Destino'),
+      position: const LatLng(-11.996980, -77.101067));
 
   @override
   void dispose() {
@@ -55,19 +62,28 @@ class _MapsState extends State<Maps> {
     return Scaffold(
       body: GoogleMap(
         initialCameraPosition: START_POSITION,
-        onMapCreated: (controller) {
-          googleMapController = controller;
-          location.onLocationChanged.listen((location) {
-            controller.animateCamera(
-              CameraUpdate.newCameraPosition(
-                CameraPosition(
-                    target: LatLng(location.latitude!, location.longitude!),
-                    zoom: 14),
-              ),
-            );
-          });
-        },
+        zoomControlsEnabled: false,
+        onMapCreated: onMapCreatedEvent,
+        markers: {origin, destination},
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.navigation),
+        backgroundColor: Colors.green,
+        onPressed: () => {},
       ),
     );
+  }
+
+  void onMapCreatedEvent(controller) {
+    googleMapController = controller;
+    location.onLocationChanged.listen((location) {
+      controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+              target: LatLng(location.latitude!, location.longitude!),
+              zoom: 16),
+        ),
+      );
+    });
   }
 }
