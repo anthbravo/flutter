@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:logging/logging.dart';
 import 'package:maps/providers/map_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  _setupLogging();
   runApp(MyApp());
+}
+
+void _setupLogging() {
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((rec) {
+    print('${rec.level.name}: ${rec.time}: ${rec.message}');
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -31,55 +40,40 @@ class MyApp extends StatelessWidget {
 class Maps extends StatelessWidget {
   Maps({Key? key}) : super(key: key);
 
-  static const START_POSITION =
-      CameraPosition(target: LatLng(-9.998052, -77.101699), zoom: 16);
+  static const START_POSITION = CameraPosition(
+      target: LatLng(-11.997753825747768, -77.10128308860702), zoom: 16);
   Location location = Location();
 
   late GoogleMapController googleMapController;
 
-  Marker origin = Marker(
-      markerId: const MarkerId('origin'),
-      infoWindow: InfoWindow(
-          title: 'Origen',
-          snippet: 'Latitud: -11.998052, Longitud: -77.101699'),
-      position: const LatLng(-11.998052, -77.101699));
-  Marker destination = Marker(
-      markerId: const MarkerId('destination'),
-      infoWindow: const InfoWindow(
-          title: 'Destino',
-          snippet: 'Latitud: -11.996980, Longitud: -77.101067'),
-      position: const LatLng(-11.996980, -77.101067));
-
-  void changeDirection(BuildContext context, List<LatLng> direction) {
-    Provider.of<MapProvider>(context, listen: false).changeDirection(direction);
+  void loadRoute(BuildContext context) {
+    Provider.of<MapProvider>(context, listen: false).getMarks();
   }
 
   @override
   Widget build(BuildContext context) {
-    var direction = Provider.of<MapProvider>(context).getDirection;
+    List<LatLng> polylines = Provider.of<MapProvider>(context).getPolylines;
+    Set<Marker> markers = Provider.of<MapProvider>(context).getMarkers;
     return Scaffold(
       body: GoogleMap(
           initialCameraPosition: START_POSITION,
           zoomControlsEnabled: false,
-          onMapCreated: onMapCreatedEvent,
-          markers: {
-            origin,
-            destination
-          },
+          // onMapCreated: onMapCreatedEvent,
+          markers: markers,
           polylines: {
-            if (direction.length > 0)
+            if (polylines.length > 0)
               Polyline(
                 polylineId: const PolylineId('overview_polyline'),
                 color: Colors.red,
                 width: 5,
-                points: direction,
+                points: polylines,
               ),
           }),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.navigation),
         backgroundColor: Colors.green,
         onPressed: () {
-          changeDirection(context, [origin.position, destination.position]);
+          loadRoute(context);
         },
       ),
     );
