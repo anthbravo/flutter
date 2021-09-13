@@ -14,7 +14,7 @@ abstract class MarksService extends ChopperService {
       interceptors: [HttpLoggingInterceptor()],
       converter: JsonConverter(),
       errorConverter: JsonConverter(),
-      baseUrl: 'https://run.mocky.io/v3/bdfb8a43-4272-49d3-8df5-d5f5a95dfa43',
+      baseUrl: 'https://run.mocky.io/v3/0e302b39-ef0d-49a3-a43d-087159335917',
       services: [
         _$MarksService(),
       ],

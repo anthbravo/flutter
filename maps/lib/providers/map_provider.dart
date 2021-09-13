@@ -40,29 +40,31 @@ class MapProvider extends ChangeNotifier {
             mark.isEndPoint!))
         .toList();
 
-    _loadMarkers(marks);
     _loadPolylines(marks);
+    _loadMarkers(marks);
 
     notifyListeners();
   }
 
   void _loadMarkers(List<MarkModel> marks) {
+    marks.removeWhere(
+        (mark) => !mark.isBusStop && !mark.isFinishPoint && !mark.isStartPoint);
+
     Set<Marker> markers = {};
 
     markers = marks
         .map((mark) => Marker(
-              markerId: MarkerId(mark.id.toString()),
-              infoWindow: InfoWindow(
-                  title: mark.name,
-                  snippet:
-                      'Latitud: ${mark.latitude}, Longitud: ${mark.longitude}'),
-              position: LatLng(mark.latitude, mark.longitude),
-              icon: mark.isStartPoint
-                  ? _startPointIcon
-                  : mark.isFinishPoint
-                      ? _finishPointIcon
-                      : _busStopIcon
-            ))
+            markerId: MarkerId(mark.id.toString()),
+            infoWindow: InfoWindow(
+                title: mark.name,
+                snippet:
+                    'Latitud: ${mark.latitude}, Longitud: ${mark.longitude}'),
+            position: LatLng(mark.latitude, mark.longitude),
+            icon: mark.isStartPoint
+                ? _startPointIcon
+                : mark.isFinishPoint
+                    ? _finishPointIcon
+                    : _busStopIcon))
         .toSet();
 
     if (markers.length > 0) {
