@@ -13,8 +13,10 @@ class DriverProvider extends ChangeNotifier {
 
   late BitmapDescriptor _driverIcon;
 
-  Set<Marker> get getMarkers {
-    return this._markers;
+  final String MARKER_ID_DRIVER = "driver";
+
+  set markers(Set<Marker> markers) {
+    this._markers = markers;
   }
 
   DriverProvider() {
@@ -56,10 +58,14 @@ class DriverProvider extends ChangeNotifier {
   void _updateDriverMarker(LocationData location) {
     LatLng latlng = LatLng(location.latitude!, location.longitude!);
 
-    _markers.clear();
+    try {
+      Marker driverMarker = _markers
+          .firstWhere((marker) => marker.markerId.value == MARKER_ID_DRIVER);
+      _markers.remove(driverMarker);
+    } catch (e) {}
 
     Marker driverMarker = Marker(
-        markerId: MarkerId("driver"),
+        markerId: MarkerId(MARKER_ID_DRIVER),
         position: latlng,
         rotation: location.heading!,
         draggable: false,

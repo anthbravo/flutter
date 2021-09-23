@@ -1,6 +1,4 @@
-//
 import 'package:chopper/chopper.dart';
-import 'package:maps/dtos/marks_response_dto.dart';
 
 part 'marks_service.chopper.dart';
 
@@ -14,7 +12,7 @@ abstract class MarksService extends ChopperService {
       interceptors: [HttpLoggingInterceptor()],
       converter: JsonConverter(),
       errorConverter: JsonConverter(),
-      baseUrl: 'https://run.mocky.io/v3/0e302b39-ef0d-49a3-a43d-087159335917',
+      baseUrl: 'https://run.mocky.io/v3/5a690edb-5e2e-430a-b539-cb835945853c',
       services: [
         _$MarksService(),
       ],

@@ -7,6 +7,7 @@ import 'package:maps/services/marks_service.dart';
 class MapProvider extends ChangeNotifier {
   List<LatLng> _polylines = [];
   Set<Marker> _markers = {};
+  String _mapStyle = "";
 
   late BitmapDescriptor _startPointIcon;
   late BitmapDescriptor _finishPointIcon;
@@ -14,17 +15,22 @@ class MapProvider extends ChangeNotifier {
 
   MapProvider() {
     _loadIcons();
+    ;
   }
 
-  List<LatLng> get getPolylines {
+  List<LatLng> get polylines {
     return this._polylines;
   }
 
-  Set<Marker> get getMarkers {
+  Set<Marker> get markers {
     return this._markers;
   }
 
-  void getMarks() async {
+  String get mapStyle {
+    return this._mapStyle;
+  }
+
+  void loadRoute() async {
     MarksService marksService = MarksService.create();
     MarksResponseDto marksResponseDto =
         MarksResponseDto.fromJson((await marksService.getMarks()).body);
@@ -47,12 +53,11 @@ class MapProvider extends ChangeNotifier {
   }
 
   void _loadMarkers(List<MarkModel> marks) {
-    marks.removeWhere(
-        (mark) => !mark.isBusStop && !mark.isFinishPoint && !mark.isStartPoint);
-
     Set<Marker> markers = {};
 
     markers = marks
+        .where(
+            (mark) => mark.isBusStop || mark.isFinishPoint || mark.isStartPoint)
         .map((mark) => Marker(
             markerId: MarkerId(mark.id.toString()),
             infoWindow: InfoWindow(
@@ -75,8 +80,11 @@ class MapProvider extends ChangeNotifier {
   void _loadPolylines(List<MarkModel> marks) {
     List<LatLng> polylines = [];
 
-    polylines =
-        marks.map((mark) => LatLng(mark.latitude, mark.longitude)).toList();
+    polylines = marks
+        .where((mark) =>
+            !mark.isStartPoint && !mark.isFinishPoint && !mark.isBusStop)
+        .map((mark) => LatLng(mark.latitude, mark.longitude))
+        .toList();
 
     if (polylines.length > 0) {
       this._polylines = polylines;
